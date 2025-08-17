@@ -20,6 +20,14 @@ export const sessionValidators = {
     body('counselor_name').isString().trim().notEmpty().withMessage('counselor_name is required'),
     body('session_date').isISO8601().withMessage('session_date must be a valid date'),
     body('notes').optional().isString()
+  ],
+  update: [
+    param('id').isInt({ min: 1 }).withMessage('id must be a positive integer'),
+    body('student_id').optional().isInt({ min: 1 }).withMessage('student_id must be a positive integer'),
+    body('counselor_name').optional().isString().trim().notEmpty(),
+    body('session_date').optional().isISO8601().withMessage('session_date must be a valid date'),
+    body('notes').optional().isString(),
+    body('session_duration').optional().isInt({ min: 1 }).withMessage('session_duration must be a positive integer')
   ]
 };
 

@@ -24,9 +24,9 @@ router.get('/overview', async (req, res) => {
         COUNT(DISTINCT s.id) as totalStudents,
         COUNT(DISTINCT cs.id) as totalSessions,
         COUNT(DISTINCT CASE WHEN cs.session_date >= DATE_SUB(CURDATE(), INTERVAL 30 DAY) THEN s.id END) as activeStudents,
-        AVG(cs.session_duration) as avgSessionDuration,
+        COALESCE(AVG(cs.session_duration), 0) as avgSessionDuration,
         COUNT(DISTINCT cs.counselor_name) as totalCounselors,
-        SUM(CASE WHEN cs.session_date >= DATE_SUB(CURDATE(), INTERVAL 30 DAY) THEN 1 ELSE 0 END) as sessionsThisMonth
+        COALESCE(SUM(CASE WHEN cs.session_date >= DATE_SUB(CURDATE(), INTERVAL 30 DAY) THEN 1 ELSE 0 END), 0) as sessionsThisMonth
       FROM students s
       LEFT JOIN counseling_sessions cs ON s.id = cs.student_id
       ${dateFilter}

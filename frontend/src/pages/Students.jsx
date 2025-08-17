@@ -6,7 +6,9 @@ import toast from 'react-hot-toast'
 
 export default function Students() {
   const queryClient = useQueryClient()
-  const { data: students, isLoading } = useQuery('students', () => studentsAPI.getAll().then(res => res.data))
+  const { data: students, isLoading, error } = useQuery('students', () =>
+    studentsAPI.getAll().then(res => res.data)
+  )
   const [editingStudent, setEditingStudent] = useState(null)
   const [formData, setFormData] = useState({ first_name: '', last_name: '', career_interest: '' })
 
@@ -69,13 +71,17 @@ export default function Students() {
     return <div className="text-center text-lg font-semibold text-green-800">Loading students...</div>
   }
 
+  if (error) {
+    return <div className="text-center text-lg font-semibold text-red-600">Error loading students: {error.message}</div>
+  }
+
   return (
     <div className="p-6 max-w-5xl mx-auto">
       <h1 className="text-3xl font-bold text-green-900 mb-6">Manage Students</h1>
 
       {/* Create / Edit Form */}
-      <form 
-        onSubmit={editingStudent ? handleUpdate : handleCreate} 
+      <form
+        onSubmit={editingStudent ? handleUpdate : handleCreate}
         className="mb-8 p-6 bg-white rounded-2xl shadow-md space-y-4"
       >
         <div>
@@ -139,31 +145,39 @@ export default function Students() {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100">
-            {students.map((student) => (
-              <tr key={student.id} className="hover:bg-green-50 transition">
-                <td className="px-6 py-4">
-                  <Link to={`/students/${student.id}`} className="text-green-700 hover:underline font-semibold">
-                    {student.first_name}
-                  </Link>
-                </td>
-                <td className="px-6 py-4">{student.last_name}</td>
-                <td className="px-6 py-4">{student.career_interest}</td>
-                <td className="px-6 py-4 space-x-3">
-                  <button
-                    onClick={() => handleEdit(student)}
-                    className="text-blue-600 hover:text-blue-800 font-medium"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleDelete(student.id)}
-                    className="text-red-600 hover:text-red-800 font-medium"
-                  >
-                    Delete
-                  </button>
+            {students && students.length > 0 ? (
+              students.map((student) => (
+                <tr key={student.id} className="hover:bg-green-50 transition">
+                  <td className="px-6 py-4">
+                    <Link to={`/students/${student.id}`} className="text-green-700 hover:underline font-semibold">
+                      {student.first_name}
+                    </Link>
+                  </td>
+                  <td className="px-6 py-4">{student.last_name}</td>
+                  <td className="px-6 py-4">{student.career_interest || 'NULL'}</td>
+                  <td className="px-6 py-4 space-x-3">
+                    <button
+                      onClick={() => handleEdit(student)}
+                      className="text-blue-600 hover:text-blue-800 font-medium"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDelete(student.id)}
+                      className="text-red-600 hover:text-red-800 font-medium"
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="4" className="px-6 py-8 text-center text-gray-500">
+                  No students found
                 </td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </div>
