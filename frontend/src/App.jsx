@@ -23,9 +23,7 @@ const ANALYTICS_CONFIG = {
   compressionEnabled: true,
 }
 
-// ===============================
-// UTIL FUNCTIONS
-// ===============================
+
 const safeLocalStorageSet = (key, data, maxEntries) => {
   try {
     if (!Array.isArray(data)) data = [data]

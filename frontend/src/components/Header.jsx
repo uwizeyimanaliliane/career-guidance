@@ -7,7 +7,7 @@ export default function Header({ user, onLogout }) {
       <div className="flex flex-1 justify-between px-4 sm:px-6 lg:px-8">
         <div className="flex flex-1">
           <h1 className="text-2xl font-semibold text-gray-900 flex items-center">
-            Career Guidance Management System
+            Career Guidance Management Information System
           </h1>
         </div>
         <div className="ml-4 flex items-center md:ml-6">
